@@ -5,18 +5,35 @@ var HashTable = function() {
 
 HashTable.prototype.insert = function(k, v) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  this._storage.set(index,v);
+  var arr = this._storage.get(index);
+  if (arr === undefined) {
+    arr = [];
+  }
+  var rightValue = arr.push([k,v]);
+  this._storage.set(index,arr);
+  console.log(arr);
 };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  var value = this._storage.get(index);
-  this._storage.each(function(val, i, storage) {
-    if (val === value) {
-      index = i;
+  // default case - do later
+  //interate through hastTable
+  this._storage.each(function(storageI, i, storage) {
+    //interate through arrays with same index
+    console.log(storageI);
+    if(storageI !== undefined) {
+      for (var j = 0; j < storageI.length; j++) {
+        // find key in array of index
+        if(storageI[j][0] === k) {
+          return storageI[j][1];
+        }
+        //return dup[1] of array of index k
+
+      }
     }
   });
-  return this._storage.get(index);
+
+
 };
 
 HashTable.prototype.remove = function(k) {
