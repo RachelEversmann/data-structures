@@ -4,14 +4,18 @@ var Tree = function(value) {
 
   // your code here
   newTree.children = [];  // fix me
-  _.extend(newTree, treeMethods);
+  _.extend(newTree, treeMethods, binaryMethods);
   return newTree;
 };
 
 var treeMethods = {};
 
-treeMethods.addChild = function(value) {
-  this.children.push(Tree(value));
+treeMethods.addChild = function(value, index) {
+  if (arguments.length < 2) {
+    this.children.push(Tree(value));
+  } else {
+    this.children[index] = Tree(value);
+  }
 };
 
 treeMethods.contains = function(target) {
@@ -23,15 +27,15 @@ var recursiveContains = function (tree, target) {
   if (tree.value === target) {
     ret = true;
   } else {
-    if (tree.children[0] !== undefined) {
-      ret = recursiveContains(tree.children[0], target);
+    for (var i = 0; i < tree.children.length ; i++) {
+      if (tree.children[i] !== undefined) {
+        ret = recursiveContains(tree.children[i], target);
+      }
+      if (ret === true) {
+        return true;
+      }
     }
-    if (ret === true) {
-      return true;
-    }
-    if (tree.children[1] !== undefined) {
-      ret = recursiveContains(tree.children[1], target);
-    }
+
   }
   return ret;
 };
