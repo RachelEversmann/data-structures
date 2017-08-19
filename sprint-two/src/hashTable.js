@@ -1,12 +1,12 @@
-var HashTable = function() {
-  this._limit = 8;
+var HashTable = function(limit) {
+  this._limit = limit;
   this._storage = LimitedArray(this._limit);
 };
 
 HashTable.prototype.insert = function(k, v) {
   var index = getIndexBelowMaxForKey(k, this._limit);
   var obj = this._storage.get(index);
-  if (obj === undefined) {
+  if (!obj) {
     obj = {};
   }
   obj[k] = v;
@@ -19,9 +19,9 @@ HashTable.prototype.retrieve = function(k) {
   var ret;
   this._storage.each(function(storageI, i, storage) {
     //interate through arrays with same index
-    if (storageI !== undefined) {
+    if (storageI) {
         // find key in array of index
-      if (storageI[k] !== undefined) {
+      if (storageI[k]) {
         ret = storageI[k];
       }
     }

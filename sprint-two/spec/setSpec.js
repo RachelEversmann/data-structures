@@ -24,4 +24,12 @@ describe('set', function() {
     expect(set.contains('Mel Gibson')).to.equal(false);
   });
 
+  it('should be able to hold a lot of items', function() {
+    for (var i = 0;i<100;i++) {
+      set.add(i);
+    }
+    expect(set.contains(99)).to.equal(true);
+    expect(set.contains(100)).to.equal(!true);
+  });
+
 });
