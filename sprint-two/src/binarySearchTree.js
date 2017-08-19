@@ -1,12 +1,8 @@
 var BinarySearchTree = function(value) {
   var newBinary = {};
-  newBinary.myTree = [];
-  newBinary.isFirst = true;
-  newBinary.binaryTree = {};
   newBinary.value = value;
-  newBinary.current = null; // tree
-  newBinary.left = 0;
-  newBinary.right = 0;
+  newBinary.left = null;
+  newBinary.right = null;
 
   // your code here
   _.extend(newBinary, binaryMethods);
@@ -15,74 +11,90 @@ var BinarySearchTree = function(value) {
 //left, right, insert, contains, depthFirstLog
 var binaryMethods = {};
 
-binaryMethods.search = function (value, tree) {
-  console.log(tree.value);
-  if (tree.value === value) {
-    return tree;
-  } else {
-    if (tree.value > value) {
-      return tree.search(value, tree.children[1]);
+binaryMethods.insert = function(value) {
+  if (value > this.value) {
+    if (this.right === null) {
+      this.right = BinarySearchTree(value);
     } else {
-      return tree.search(value, tree.children[0]);
+      this.insertTree(value, this.right);
+    }
+  } else {
+    if (this.left === null) {
+      this.left = BinarySearchTree(value);
+    } else {
+      this.insertTree(value, this.left);
     }
   }
 };
 
-binaryMethods.insert = function(value) {
-  if (this.isFirst) {
-    this.myTree[0] = Tree(this.value);
-  }
-  console.log('tree0', this.myTree[0]);
-  if (this.myTree[0].children[0] !== undefined) {
-    this.left = this.myTree[0].children[0];
-  }
-  if (this.myTree[0].children[1] !== undefined) {
-    this.right = this.myTree[0].children[1];
-  }
-  return this.insertWithTree(value, this.myTree[0]);
-};
-
-binaryMethods.containsBinary = function(value) {
-  return this.myTree[0].contains(value);
+binaryMethods.contains = function(value) {
+  return recursiveBinaryContains(this, value);
 };
 
 binaryMethods.depthFirstLog = function(callBack) {
-
-};
-
-binaryMethods.addRight = function (value, tree) {
-  if (tree.children[1] === undefined) {
-    tree.children[1] = Tree(value);
-    return;
-  } else {
-    tree.insertWithTree(value, tree.children[1]);
+  if (this.value) {
+    callBack(this.value);
+  }
+  if (this.right) {
+    this.right.depthFirstLog(callBack);
+  }
+  if (this.left) {
+    this.left.depthFirstLog(callBack);
   }
 };
 
-binaryMethods.addLeft = function (value, tree) {
-  if (tree.children[0] === undefined) {
-    tree.children[0] = Tree(value);
-    return;
-  } else {
-    tree.insertWithTree(value, tree.children[0]);
-  }
-};
-
-binaryMethods.insertWithTree = function (value, tree) {
-  if (value > tree.value) {
-    if (tree.children[1] === undefined) {
-      tree.children[1] = Tree(value);
+binaryMethods.insertTree = function (value, bTree) {
+  if (value > bTree.value) {
+    if (bTree.right === null) {
+      bTree.right = BinarySearchTree(value);
     } else {
-      tree.addRight(value, tree);
+      bTree.insertTree(value, bTree.right);
     }
   } else {
-    if (tree.children[0] === undefined) {
-      tree.children[0] = Tree(value);
+    if (bTree.left === null) {
+      bTree.left = BinarySearchTree(value);
     } else {
-      tree.addLeft(value, tree);
+      bTree.insertTree(value, bTree.left);
     }
   }
 };
+
+var recursiveBinaryContains = function (tree, value) {
+  if (value === tree.value) {
+    return true;
+  } else if (tree.right && value > tree.value) {
+    return recursiveBinaryContains (tree.right, value);
+  } else if (tree.left && value < tree.value) {
+    return recursiveBinaryContains (tree.left, value);
+  } else {
+    return false;
+  }
+};
+// var recursiveBinaryContains = function (tree, target) {
+//   var ret = false;
+//   if(!tree) {
+//     ret = false;
+//   } else {
+//     if (tree.right) {
+//       if (tree.right.value === target) {
+//         ret = true;
+//       }
+//     }
+//     if (tree.left) {
+//       if(tree.left.value === target) {
+//         ret = true;
+//       }
+//     }
+//     if (tree.value === target) {
+//       ret = true;
+//     } else if (target > tree.value) {
+//       ret =  recursiveBinaryContains(tree.right,target);
+//     } else if( target < tree.value){
+//       ret =  recursiveBinaryContains(tree.left,target);
+//     }
+//   }
+//   return ret;
+// };
 
 /*
  * Complexity: What is the time complexity of the above functions?
